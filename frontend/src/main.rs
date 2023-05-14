@@ -9,12 +9,15 @@ enum Route {
     Home,
     #[at("/hello-server")]
     HelloServer,
+    #[at("/counter")]
+    Counter,
 }
 
 fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! { <h1>{ "Hello Frontend" }</h1> },
         Route::HelloServer => html! { <HelloServer /> },
+        Route::Counter => html! { <Counter /> },
     }
 }
 
@@ -73,6 +76,25 @@ fn hello_server() -> Html {
                 <div>{"Error requesting data from server: "}{err}</div>
             }
         }
+    }
+}
+
+#[function_component(Counter)]
+fn counter() -> Html {
+    let counter = use_state(|| 0);
+    let onclick = {
+        let counter = counter.clone();
+        move |_| {
+            let value = *counter + 1;
+            counter.set(value);
+        }
+    };
+
+    html! {
+        <div>
+            <button {onclick}>{ "+1" }</button>
+            <p>{ *counter }</p>
+        </div>
     }
 }
 
