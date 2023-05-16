@@ -2,6 +2,7 @@ use axum::body::{boxed, Body};
 use axum::http::{Response, StatusCode};
 use axum::{response::IntoResponse, routing::get, Router};
 use clap::Parser;
+use serde::{Deserialize, Serialize};
 use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 use std::path::PathBuf;
 use std::str::FromStr;
@@ -9,6 +10,8 @@ use tokio::fs;
 use tower::{ServiceBuilder, ServiceExt};
 use tower_http::services::ServeDir;
 use tower_http::trace::TraceLayer;
+
+const KEY: &'static str = "yew.tut.database";
 
 // Setup the command line interface with clap.
 #[derive(Parser, Debug)]
@@ -92,4 +95,41 @@ async fn main() {
 
 async fn hello() -> impl IntoResponse {
     "hello from server!"
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Database {
+    users: Vec<User>,
+}
+
+impl Database {
+    pub fn new() -> Self {
+        Database { users: Vec::new() }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct User {
+    name: String,
+    surname: String,
+    brithday: String,
+    username: String,
+}
+
+impl User {
+    pub fn new() -> Self {
+        User {
+            name: String::new(),
+            surname: String::new(),
+            brithday: String::new(),
+            username: String::new(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.name.is_empty()
+            && self.surname.is_empty()
+            && self.brithday.is_empty()
+            && self.username.is_empty()
+    }
 }
