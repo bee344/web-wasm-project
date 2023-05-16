@@ -1227,11 +1227,14 @@ dependencies = [
  "axum",
  "clap",
  "log",
+ "serde",
  "tokio",
  "tower",
  "tower-http",
  "tracing",
  "tracing-subscriber",
+ "wasm-bindgen",
+ "yew",
 ]
 
 [[package]]
